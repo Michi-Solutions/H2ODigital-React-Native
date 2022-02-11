@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, StatusBar, TextInput, TouchableOpacity } from 'react-native';
 
-export default class LoginScreen extends Component {
-  render() {
+export default function LoginScreen({ navigation }) {
     return(
-      <View style={styles.container}>
+        <View style={styles.container}>
         <StatusBar
         translucent 
         backgroundColor='transparent'
@@ -28,14 +27,14 @@ export default class LoginScreen extends Component {
                 placeholder='Senha'/>
 
             <TouchableOpacity
-                style={styles.btn}>
+                style={styles.btn}
+                onPress={() => navigation.navigate('Dashboard')}>
                 <Text style={styles.btnText}>Entrar</Text>
             </TouchableOpacity>
         </View>
         
-      </View>
+        </View>
     )
-  }
 }
 
 const styles = StyleSheet.create({
