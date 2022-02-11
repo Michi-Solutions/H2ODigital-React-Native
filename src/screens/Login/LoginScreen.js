@@ -29,6 +29,7 @@ export default function LoginScreen({ navigation }) {
       if(response.status === 200) {
         console.log(response.status)
         console.log('autorizado a entrar')
+        navigation.navigate('Dashboard')
       } else {
         setFormError('Usuário ou senha incorretos')
       }
@@ -68,7 +69,7 @@ export default function LoginScreen({ navigation }) {
           <TouchableOpacity
               style={styles.btn}
               onPress={login}>
-               // onPress={() => navigation.navigate('Dashboard')}
+               
               <Text style={styles.btnText}>Entrar</Text>
           </TouchableOpacity>
       </View>
@@ -121,5 +122,5 @@ const styles = StyleSheet.create({
     color: '#EFEFEF',
     fontSize: 18,
     fontWeight: 'bold'
-  }
+  },
 });
