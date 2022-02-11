@@ -10,7 +10,7 @@ if (!global.atob) {
     global.atob = decode;
 }
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -68,13 +68,14 @@ export default function LoginScreen() {
           <TouchableOpacity
               style={styles.btn}
               onPress={login}>
+               // onPress={() => navigation.navigate('Dashboard')}
               <Text style={styles.btnText}>Entrar</Text>
           </TouchableOpacity>
       </View>
       
     </View>
   )
-  }
+}
 
 const styles = StyleSheet.create({
   container : {
