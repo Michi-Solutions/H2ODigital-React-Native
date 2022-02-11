@@ -1,40 +1,80 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { View, Text, StyleSheet, Image, StatusBar, TextInput, TouchableOpacity } from 'react-native';
+import {decode, encode} from 'base-64'
+
+if (!global.btoa) {
+    global.btoa = encode;
+}
+    
+if (!global.atob) {
+    global.atob = decode;
+}
 
 export default function LoginScreen({ navigation }) {
-    return(
-        <View style={styles.container}>
-        <StatusBar
-        translucent 
-        backgroundColor='transparent'
-        />
-        
-        <Image
-        style={styles.city}
-        source={require('../../img/header-img.png')}/>
 
-        <Text style={styles.title}>H2O DIGITAL</Text>
-        
-        <View style={styles.inputSection}>
-            <TextInput 
-                style={styles.input}
-                placeholderTextColor="#EFEFEF" 
-                placeholder='Email'/>
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [formError, setFormError] = useState('');
 
-            <TextInput 
-                style={styles.input}
-                placeholderTextColor="#EFEFEF" 
-                placeholder='Senha'/>
+  const url = "http://h2odigital.com.br/api/dashboard/136"
 
-            <TouchableOpacity
-                style={styles.btn}
-                onPress={() => navigation.navigate('Dashboard')}>
-                <Text style={styles.btnText}>Entrar</Text>
-            </TouchableOpacity>
-        </View>
-        
-        </View>
-    )
+  function login() {
+    fetch(url, { 
+      method: 'get', 
+      headers: new Headers({
+          'Authorization': 'Basic '+btoa(`${email}:${password}`), 
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }),
+    }).then(response => {
+      if(response.status === 200) {
+        console.log(response.status)
+        console.log('autorizado a entrar')
+      } else {
+        setFormError('Usuário ou senha incorretos')
+      }
+    })
+  }
+
+  return(
+    <View style={styles.container}>
+      <StatusBar
+      translucent 
+      backgroundColor='transparent'
+      />
+      
+      <Image
+      style={styles.city}
+      source={require('../../img/header-img.png')}/>
+
+      <Text style={styles.title}>H2O DIGITAL</Text>
+      
+      <View style={styles.inputSection}>
+          <TextInput 
+              style={styles.input}
+              placeholderTextColor="#EFEFEF" 
+              placeholder='Email'
+              onChangeText={newEmail => setEmail(newEmail)}
+              defaultValue={email}/>
+
+          <TextInput 
+              style={styles.input}
+              placeholderTextColor="#EFEFEF" 
+              placeholder='Senha'
+              onChangeText={newPassword => setPassword(newPassword)}
+              defaultValue={password}/>
+            
+          <Text>{formError}</Text>
+
+          <TouchableOpacity
+              style={styles.btn}
+              onPress={login}>
+               // onPress={() => navigation.navigate('Dashboard')}
+              <Text style={styles.btnText}>Entrar</Text>
+          </TouchableOpacity>
+      </View>
+      
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
