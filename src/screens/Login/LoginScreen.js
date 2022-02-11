@@ -62,7 +62,8 @@ export default function LoginScreen({ navigation }) {
               placeholderTextColor="#EFEFEF" 
               placeholder='Senha'
               onChangeText={newPassword => setPassword(newPassword)}
-              defaultValue={password}/>
+              defaultValue={password}
+              secureTextEntry={true}/>
             
           <Text>{formError}</Text>
 
