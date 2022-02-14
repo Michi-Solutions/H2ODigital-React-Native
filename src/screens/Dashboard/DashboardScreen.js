@@ -33,16 +33,26 @@ export default function DashboardScreen() {
     }, []);
 
     return (
-      <View>
-        <View styles={styles.graph}>
+        
+        <View style={styles.container}>
+          <Text style={styles.welcome}>
+            Bem Vindo, Usuário
+          </Text>
           <DashboardComponent/>
-        </View>
       </View>
     )
 }
 
 const styles = StyleSheet.create({
-  graph: {
-    width: '100%'
+  container: {
+    height: '100%',
+    backgroundColor: '#EFEFEF'
+  },
+  welcome: {
+    fontWeight: 'bold',
+      color: '#57B5DB',
+      fontSize: 24,
+      marginLeft: 20,
+      marginTop: 15
   }
 });
