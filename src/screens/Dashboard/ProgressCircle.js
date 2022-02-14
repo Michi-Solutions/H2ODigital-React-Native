@@ -9,13 +9,13 @@ class PieChartWithCenteredLabels extends React.PureComponent {
         const data = [
             {
                 key: 1,
-                amount: 38,
+                amount: 100 - this.props.percentual,
                 svg: { fill: '#BBBBBB' },
                 arc: { cornerRadius: 10 }
             },
             {
                 key: 2,
-                amount: 62,
+                amount: this.props.percentual,
                 svg: { fill: '#57b5db' },
                 arc: { cornerRadius: 10 }
             }
