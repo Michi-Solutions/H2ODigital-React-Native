@@ -4,15 +4,15 @@ import {decode, encode} from 'base-64'
 import ProgressCircleExample from './ProgressCircle'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function DashboardComponent() {
+export default function DashboardComponent(props) {
     return (
       <View style={styles.container}>
           <View style={styles.card}>
               
-            <Text style={styles.title}>Reservatório 1</Text>
+            <Text style={styles.title}>{props.nome}</Text>
 
             <View styles={styles.graph}>
-                <ProgressCircleExample/>
+                <ProgressCircleExample percentual={props.percentualGrafico}/>
             </View>
 
             <View style={styles.info}> 
@@ -30,13 +30,13 @@ export default function DashboardComponent() {
 
                 <View style={styles.infoValue}>
                     <Text style={styles.infoText}>
-                        84(m³)
+                        {props.volumeTotal}(m³)
                     </Text>
                     <Text style={styles.infoText}>
-                        62%
+                        {props.percentual}%
                     </Text>
                     <Text style={styles.infoText}>
-                        02/02/2022 14:00
+                        {props.ultimaLeitura}
                     </Text>
                     <TouchableOpacity style={styles.details}>
                         <Text style={styles.detailsText}>Detalhes</Text>
