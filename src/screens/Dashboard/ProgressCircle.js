@@ -48,8 +48,8 @@ class PieChartWithCenteredLabels extends React.PureComponent {
                 valueAccessor={({ item }) => item.amount}
                 data={data}
                 spacing={0}
-                outerRadius={'35'}
-                innerRadius={50}
+                outerRadius={50}
+                innerRadius={20}
             >
                 <Labels/>
             </PieChart>
