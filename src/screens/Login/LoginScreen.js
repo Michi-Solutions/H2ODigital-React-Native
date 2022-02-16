@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, StatusBar, TextInput, TouchableOpacity } from 'react-native';
 import {decode, encode} from 'base-64'
 
@@ -10,73 +10,83 @@ if (!global.atob) {
     global.atob = decode;
 }
 
-export default function LoginScreen({ navigation }) {
+export default class DashboardScreen extends Component {
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [formError, setFormError] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [formError, setFormError] = useState('');
+  // const [userId, setUserId] = useState('');
 
-  const url = "http://h2odigital.com.br/api/dashboard/136"
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: [],
+      password: [],
+      formError: [],
+      userId: [null]
+    }
+  }
 
-  function login() {
-    fetch(url, { 
+  login = () => {
+    const url = "http://h2odigital.com.br/api/dashboard"
+
+    fetch(`${url}/136`, { 
       method: 'get', 
       headers: new Headers({
-          'Authorization': 'Basic '+btoa(`${email}:${password}`), 
+          'Authorization': 'Basic '+btoa(`${this.state.email}:${this.state.password}`), 
           'Content-Type': 'application/x-www-form-urlencoded'
       }),
     }).then(response => {
       if(response.status === 200) {
-        console.log(response.status)
+        console.log('---------')
         console.log('autorizado a entrar')
-        navigation.navigate('Dashboard')
+        this.props.navigation.navigate("Dashboard")
       } else {
-        setFormError('Usuário ou senha incorretos')
+        this.setState({formError: "usuario ou senha incorretos"})
       }
     })
   }
 
-  return(
-    <View style={styles.container}>
-      <StatusBar
-      translucent 
-      backgroundColor='transparent'
-      />
-      
-      <Image
-      style={styles.city}
-      source={require('../../img/header-img.png')}/>
+  render() {
+    return(
+      <View style={styles.container}>
+        <StatusBar
+        translucent 
+        backgroundColor='transparent'
+        />
+        
+        <Image
+        style={styles.city}
+        source={require('../../img/header-img.png')}/>
 
-      <Text style={styles.title}>H2O DIGITAL</Text>
-      
-      <View style={styles.inputSection}>
-          <TextInput 
-              style={styles.input}
-              placeholderTextColor="#EFEFEF" 
-              placeholder='Email'
-              onChangeText={newEmail => setEmail(newEmail)}
-              defaultValue={email}/>
+        <Text style={styles.title}>H2O DIGITAL</Text>
+        
+        <View style={styles.inputSection}>
+            <TextInput 
+                style={styles.input}
+                placeholderTextColor="#EFEFEF" 
+                placeholder='Email'
+                onChangeText={newEmail => this.setState({email: newEmail})}/>
 
-          <TextInput 
-              style={styles.input}
-              placeholderTextColor="#EFEFEF" 
-              placeholder='Senha'
-              onChangeText={newPassword => setPassword(newPassword)}
-              defaultValue={password}
-              secureTextEntry={true}/>
-            
-          <Text>{formError}</Text>
+            <TextInput 
+                style={styles.input}
+                placeholderTextColor="#EFEFEF" 
+                placeholder='Senha'
+                onChangeText={newPassword => this.setState({password: newPassword})}
+                secureTextEntry={true}/>
+              
+            <Text>{this.state.formError}</Text>
 
-          <TouchableOpacity
-              style={styles.btn}
-              onPress={login}>
-               
-              <Text style={styles.btnText}>Entrar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.btn}
+                onPress={this.login}>
+                
+                <Text style={styles.btnText}>Entrar</Text>
+            </TouchableOpacity>
+        </View>
+        
       </View>
-      
-    </View>
-  )
+  )}
 }
 
 const styles = StyleSheet.create({

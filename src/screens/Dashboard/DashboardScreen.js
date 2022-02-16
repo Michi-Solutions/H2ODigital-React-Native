@@ -17,15 +17,32 @@ export default class DashboardScreen extends Component {
     super(props)
     this.state = {
       data: ["No data"],
-      nome: ["No data"]
+      nome: ["No data"],
+      edificio: ["No data"],
+      userId: [null]
     }
   }
   
 
   componentDidMount() {
-    const url = "http://h2odigital.com.br/api/dashboard/136"
-  
-    fetch(url, { 
+    const urlTank = "http://h2odigital.com.br/api/dashboard/136"
+    const urlUser = "http://www.h2odigital.com.br/api/estabelecimento/capturar/136"
+    const urlId = "http://www.h2odigital.com.br/api/estabelecimento/filtrar/1"
+
+    fetch(urlId, { 
+      method: 'get', 
+      headers: new Headers({
+          'Authorization': 'Basic '+btoa('mauricio.abe@michisolutions.com.br:Senha123'), 
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), 
+    })
+    .then((response) => response.json())
+    .then((json) => {
+      this.setState({userId: json})
+      console.log(this.state.userId.resultados[0].id)
+    })
+    
+    fetch(urlTank, { 
       method: 'get', 
       headers: new Headers({
           'Authorization': 'Basic '+btoa('mauricio.abe@michisolutions.com.br:Senha123'), 
@@ -35,18 +52,35 @@ export default class DashboardScreen extends Component {
     .then((response) => response.json())
     .then((json) => {
       this.setState({data: Object.values(json), nome: Object.values(json)[0][0].reservatorio.nome})
-      console.log(this.state.data)
+    })
+
+    fetch(urlUser, { 
+      method: 'get', 
+      headers: new Headers({
+          'Authorization': 'Basic '+btoa('mauricio.abe@michisolutions.com.br:Senha123'), 
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }), 
+    })
+    .then((response) => response.json())
+    .then((json) => {
+      this.setState({edificio: json})
     })
   }
+
+  
 
     render() {
       return (
           
           <View style={styles.container}>
             <Text style={styles.welcome}>
-              Bem Vindo, Usuário
+              {this.state.edificio.nome}
             </Text>
-            <DashboardComponent nome={this.state.nome} volumeTotal={this.state.data[0][0].volumeMaximoFormatado} percentual={this.state.data[0][0].percentual} ultimaLeitura={this.state.data[0][0].dataUltimaLeituraFormatada} percentualGrafico={this.state.data[0][0].percentual}/>
+            <DashboardComponent nome={this.state.nome} 
+                                volumeTotal={this.state.data[0][0].volumeMaximoFormatado} 
+                                percentual={this.state.data[0][0].percentual} 
+                                ultimaLeitura={this.state.data[0][0].dataUltimaLeituraFormatada} 
+                                percentualGrafico={this.state.data[0][0].percentual}/>
         </View>
       )
     }
