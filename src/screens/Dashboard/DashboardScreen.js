@@ -24,12 +24,14 @@ export default class DashboardScreen extends Component {
   }
 
   async componentDidMount() {
+    const {...user} = this.props.route.params
+    setTimeout(() => {console.log('.')}, 1000);
     while ( this.state.data == "No data" ) {
       try {
-        const response = await fetch('http://www.h2odigital.com.br/api/estabelecimento/capturar/136',{ 
+        const response = await fetch(`http://www.h2odigital.com.br/api/estabelecimento/capturar/${user.id}`,{ 
         method: 'get', 
         headers: new Headers({
-            'Authorization': 'Basic '+btoa('mauricio.abe@michisolutions.com.br:Senha123'), 
+            'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
             'Content-Type': 'application/x-www-form-urlencoded',
             'cache-control': 'no-store',
             'pragma': 'no-cache'
@@ -40,10 +42,10 @@ export default class DashboardScreen extends Component {
         
 
 
-        const dashboard = await fetch('http://h2odigital.com.br/api/dashboard/136',{ 
+        const dashboard = await fetch(`http://h2odigital.com.br/api/dashboard/${user.id}`,{ 
         method: 'get', 
         headers: new Headers({
-            'Authorization': 'Basic '+btoa('mauricio.abe@michisolutions.com.br:Senha123'), 
+            'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
             'Content-Type': 'application/x-www-form-urlencoded',
             'cache-control': 'no-store',
             'pragma': 'no-cache'
