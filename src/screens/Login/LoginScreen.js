@@ -27,17 +27,19 @@ export default class DashboardScreen extends Component {
     }
   }
 
-  login = async () => {
+  login = () => {
     const url = "http://www.h2odigital.com.br/api/estabelecimento/filtrar/1"
     
-    await fetch(`${url}`, { 
+    fetch(`${url}`, { 
       method: 'get', 
       headers: new Headers({
           'Authorization': 'Basic '+btoa(`${this.state.email}:${this.state.password}`), 
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'cache-control': 'no-store',
+          'pragma': 'no-cache'
       }),
     })
-    .then((response) => response.json())
+    .then(async(response) => await response.json())
     .then((json) => {
 
       if (json.resultados[0].id != undefined){
@@ -54,7 +56,8 @@ export default class DashboardScreen extends Component {
         })
 
       } else {
-        this.setState({formError: "usuario ou senha incorretos"})
+        setTimeout(() => this.setState({formError: "usuario ou senha incorretos"}), 5000);
+        
       }
 
     })
@@ -65,7 +68,7 @@ export default class DashboardScreen extends Component {
     return(
       <View style={styles.container}>
         <StatusBar
-        translucent 
+        translucent
         backgroundColor='transparent'
         />
         
@@ -147,5 +150,10 @@ const styles = StyleSheet.create({
     color: '#EFEFEF',
     fontSize: 18,
     fontWeight: 'bold'
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: '#EFEFEF'
   },
 });
