@@ -27,26 +27,40 @@ export default class DashboardScreen extends Component {
     }
   }
 
-  login = () => {
-    const url = "http://h2odigital.com.br/api/dashboard"
-
-    fetch(`${url}/136`, { 
+  login = async () => {
+    const url = "http://www.h2odigital.com.br/api/estabelecimento/filtrar/1"
+    
+    await fetch(`${url}`, { 
       method: 'get', 
       headers: new Headers({
           'Authorization': 'Basic '+btoa(`${this.state.email}:${this.state.password}`), 
           'Content-Type': 'application/x-www-form-urlencoded'
       }),
-    }).then(response => {
-      if(response.status === 200) {
-        console.log('---------')
+    })
+    .then((response) => response.json())
+    .then((json) => {
+
+      if (json.resultados[0].id != undefined){
         console.log('autorizado a entrar')
-        this.props.navigation.navigate("Dashboard")
+
+        userId = json.resultados[0].id
+        userEmail = this.state.email
+        userPassword = this.state.password
+
+        this.props.navigation.navigate('Dashboard', {
+          id: userId,
+          email: userEmail,
+          password: userPassword
+        })
+
       } else {
         this.setState({formError: "usuario ou senha incorretos"})
       }
-    })
-  }
 
+    })
+    .catch((error) => this.setState({formError: "usuario ou senha incorretos"}))
+  }
+  
   render() {
     return(
       <View style={styles.container}>
