@@ -151,9 +151,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: '#EFEFEF'
-  },
 });
