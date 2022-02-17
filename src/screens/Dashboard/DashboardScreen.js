@@ -19,30 +19,16 @@ export default class DashboardScreen extends Component {
       data: ["No data"],
       nome: ["No data"],
       edificio: ["No data"],
-      userId: [null]
     }
   }
-  
 
   componentDidMount() {
-    const urlTank = "http://h2odigital.com.br/api/dashboard/136"
-    const urlUser = "http://www.h2odigital.com.br/api/estabelecimento/capturar/136"
-    const urlId = "http://www.h2odigital.com.br/api/estabelecimento/filtrar/1"
+    const {id, ...user} = this.props.route.params
+    console.log(user.email)
+    const urlDashboard = `http://h2odigital.com.br/api/dashboard/${id}`
+    const urlUser = `http://www.h2odigital.com.br/api/estabelecimento/capturar/${id}`
 
-    fetch(urlId, { 
-      method: 'get', 
-      headers: new Headers({
-          'Authorization': 'Basic '+btoa('mauricio.abe@michisolutions.com.br:Senha123'), 
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), 
-    })
-    .then((response) => response.json())
-    .then((json) => {
-      this.setState({userId: json})
-      console.log(this.state.userId.resultados[0].id)
-    })
-    
-    fetch(urlTank, { 
+    fetch(urlDashboard, { 
       method: 'get', 
       headers: new Headers({
           'Authorization': 'Basic '+btoa('mauricio.abe@michisolutions.com.br:Senha123'), 
