@@ -12,60 +12,55 @@ if (!global.atob) {
 
 export default class DashboardScreen extends Component {
 
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [formError, setFormError] = useState('');
-  // const [userId, setUserId] = useState('');
-
   constructor(props) {
     super(props)
     this.state = {
-      email: [],
-      password: [],
       formError: [],
-      userId: [null]
+      userData: '',
+      email: '',
+      password: '',
+      tentativas: 0
     }
   }
 
   login = () => {
-    const url = "http://www.h2odigital.com.br/api/estabelecimento/filtrar/1"
-    
-    fetch(`${url}`, { 
-      method: 'get', 
-      headers: new Headers({
+    fetch(`http://www.h2odigital.com.br/api/estabelecimento/filtrar/1`,{
+        method: 'get', 
+        headers: new Headers({
           'Authorization': 'Basic '+btoa(`${this.state.email}:${this.state.password}`), 
           'Content-Type': 'application/x-www-form-urlencoded',
           'cache-control': 'no-store',
           'pragma': 'no-cache'
-      }),
-    })
-    .then(async(response) => await response.json())
-    .then((json) => {
-      if (json.resultados[0].id != undefined){
-        
-        userId = json.resultados[0].id
-        userName = json.resultados[0].nome
-        userEmail = this.state.email
-        userPassword = this.state.password
+        }) 
+      })
+      .then(async (response) => {
+        console.log(this.state.email, this.state.password)
+        if (response.status === 200) {
+          this.setState({userData: await response.json()})
+          this.setState({formError: "Ok"})
+          if (this.state.userData.resultados != undefined) {
+            this.props.navigation.navigate('Dashboard', {
+              id: this.state.userData.resultados[0].id,
+              name: this.state.userData.resultados[0].nome,
+              email: this.state.email,
+              password: this.state.password
+            })
+          }
 
-        this.props.navigation.navigate('Dashboard', {
-          id: userId,
-          name: userName,
-          email: userEmail,
-          password: userPassword
-        })
-
-        console.log('autorizado a entrar')
-
-      } else {
-        setTimeout(() => this.setState({formError: "usuario ou senha incorretos"}), 5000);
-        
-      }
-
-    })
-    .catch((error) => this.setState({formError: "usuario ou senha incorretos"}))
-  }
-  
+        } else if (response.status === 403) {
+          this.setState({formError: "Tente novamente mais tarde"})
+        } else {
+          while (this.state.tentativas >= 5) {
+            this.login()
+            this.setState({tentativas: this.state.tentativas + 1})
+          }
+          if (this.state.tentativas >= 5) {
+            this.setState({formError: "Usuário ou senha incorretos"})
+          }
+        }
+      })
+    }
+    
   render() {
     return(
       <View style={styles.container}>
