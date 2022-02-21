@@ -34,10 +34,9 @@ export default class DashboardScreen extends Component {
         }) 
       })
       .then(async (response) => {
-        console.log(this.state.email, this.state.password)
         if (response.status === 200) {
           this.setState({userData: await response.json()})
-          this.setState({formError: "Ok"})
+
           if (this.state.userData.resultados != undefined) {
             this.props.navigation.navigate('Dashboard', {
               id: this.state.userData.resultados[0].id,
@@ -52,7 +51,6 @@ export default class DashboardScreen extends Component {
         } else {
           
           while (this.state.tentativas <= 5) {
-            console.log(this.state.tentativas)
             this.Login()
             this.setState({tentativas: this.state.tentativas + 1 })
           }
