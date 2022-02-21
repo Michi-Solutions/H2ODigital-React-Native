@@ -41,19 +41,21 @@ export default class DashboardScreen extends Component {
     })
     .then(async(response) => await response.json())
     .then((json) => {
-
       if (json.resultados[0].id != undefined){
-        console.log('autorizado a entrar')
-
+        
         userId = json.resultados[0].id
+        userName = json.resultados[0].nome
         userEmail = this.state.email
         userPassword = this.state.password
 
         this.props.navigation.navigate('Dashboard', {
           id: userId,
+          name: userName,
           email: userEmail,
           password: userPassword
         })
+
+        console.log('autorizado a entrar')
 
       } else {
         setTimeout(() => this.setState({formError: "usuario ou senha incorretos"}), 5000);
