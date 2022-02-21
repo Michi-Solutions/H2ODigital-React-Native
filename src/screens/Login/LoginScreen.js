@@ -23,7 +23,7 @@ export default class DashboardScreen extends Component {
     }
   }
 
-  login = () => {
+  Login = () => {
     fetch(`http://www.h2odigital.com.br/api/estabelecimento/filtrar/1`,{
         method: 'get', 
         headers: new Headers({
@@ -38,21 +38,23 @@ export default class DashboardScreen extends Component {
         if (response.status === 200) {
           this.setState({userData: await response.json()})
           this.setState({formError: "Ok"})
-          if (this.state.userData.resultados != undefined) {
-            this.props.navigation.navigate('Dashboard', {
-              id: this.state.userData.resultados[0].id,
-              name: this.state.userData.resultados[0].nome,
-              email: this.state.email,
-              password: this.state.password
-            })
-          }
+          // if (this.state.userData.resultados != undefined) {
+          //   this.props.navigation.navigate('Dashboard', {
+          //     id: this.state.userData.resultados[0].id,
+          //     name: this.state.userData.resultados[0].nome,
+          //     email: this.state.email,
+          //     password: this.state.password
+          //   })
+          // }
 
         } else if (response.status === 403) {
           this.setState({formError: "Tente novamente mais tarde"})
         } else {
-          while (this.state.tentativas >= 5) {
-            this.login()
-            this.setState({tentativas: this.state.tentativas + 1})
+          
+          while (this.state.tentativas <= 5) {
+            console.log(this.state.tentativas)
+            this.Login()
+            this.setState({tentativas: this.state.tentativas + 1 })
           }
           if (this.state.tentativas >= 5) {
             this.setState({formError: "Usuário ou senha incorretos"})
@@ -93,7 +95,7 @@ export default class DashboardScreen extends Component {
 
             <TouchableOpacity
                 style={styles.btn}
-                onPress={this.login}>
+                onPress={this.Login}>
                 
                 <Text style={styles.btnText}>Entrar</Text>
             </TouchableOpacity>
