@@ -24,8 +24,9 @@ export default class DashboardScreen extends Component {
 
     
   }
-
+  
   async componentDidMount() {
+
     const {...user} = this.props.route.params
 
     this.setState({edificio: user.name})
@@ -49,9 +50,9 @@ export default class DashboardScreen extends Component {
           this.setState({isLoading: false})
           console.log(response.status)
         } else if (response.status === 403) {
-          setTimeout(() => {console.log('espera ai')}, 10000);
+          await new Promise(resolve => setTimeout(resolve, 10000)); // 10 sec
+          console.log(response.status)
         } else {
-          console.log('error')
           console.log(response.status)
         }
       })
