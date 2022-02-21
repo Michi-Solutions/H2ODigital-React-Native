@@ -17,77 +17,68 @@ export default class DashboardScreen extends Component {
     super(props)
     this.state = {
       data: "No data",
-      nome: ["No data"],
-      edificio: ["No data"],
-      isLoading: true
+      nome: "No data",
+      edificio: "No data",
+      isLoading: true,
     }
+
+    
   }
 
   async componentDidMount() {
     const {...user} = this.props.route.params
-    setTimeout(() => {console.log('.')}, 1000);
-    while ( this.state.data == "No data" ) {
-      try {
-        const response = await fetch(`http://www.h2odigital.com.br/api/estabelecimento/capturar/${user.id}`,{ 
-        method: 'get', 
-        headers: new Headers({
-            'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'cache-control': 'no-store',
-            'pragma': 'no-cache'
-          }), 
-        });
-        const userInfo = await response.json();
-        this.setState({edificio:userInfo.nome})
-        
 
+    this.setState({edificio: user.name})
 
-        const dashboard = await fetch(`http://h2odigital.com.br/api/dashboard/${user.id}`,{ 
-        method: 'get', 
-        headers: new Headers({
-            'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'cache-control': 'no-store',
-            'pragma': 'no-cache'
-          }), 
-        });
-        const dashboardRes = await dashboard.json();
-        this.setState({data:Object.values(dashboardRes)})
-
-
-        this.setState({isLoading: false})
-
-
-      } catch(err) {
-        setTimeout(() => {console.log('.')}, 50000);
-      }
-    }
-}
-
-    render() {
-      if (this.state.isLoading == false){
-        return (
-          
-          <View style={styles.container}>
-            <Text style={styles.welcome}>
-              {this.state.edificio}
-            </Text>
-            <DashboardComponent nome={this.state.data[0][0].reservatorio.nome} 
-                                volumeTotal={this.state.data[0][0].volumeMaximoFormatado} 
-                                percentual={this.state.data[0][0].percentual} 
-                                ultimaLeitura={this.state.data[0][0].dataUltimaLeituraFormatada} 
-                                percentualGrafico={this.state.data[0][0].percentual}/>
-          </View>
-        )
-      } else {
-        return (
-          <View style={[styles.loader]}>
-            <ActivityIndicator size="large" color="#57B5DB" />
-          </View>
-        )
-      }
+    while (this.state.isLoading == true) {
       
+      await fetch(`http://h2odigital.com.br/api/dashboard/${user.id}`,{ 
+        method: 'get', 
+        headers: new Headers({
+          'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'cache-control': 'no-store',
+          'pragma': 'no-cache'
+        }) 
+      })
+      .then(async (response) => {
+        
+        if (response.status === 200) {
+          this.setState({data: await response.json()})
+          console.log(Object.keys(this.state.data.leiturasTemporais))
+          this.setState({isLoading: false})
+          console.log(response.status)
+        } else if (response.status === 403) {
+          setTimeout(() => {console.log('espera ai')}, 10000);
+        } else {
+          console.log('error')
+          console.log(response.status)
+        }
+      })
     }
+  }
+
+  render() {
+    
+    if (this.state.isLoading == false){
+      return (
+        
+        <View style={styles.container}>
+          <Text style={styles.welcome}>
+            {this.state.edificio}
+          </Text>
+          {/* <DashboardComponent nome={this.state.data[0][0].reservatorio.nome}/> */}
+        </View>
+      )
+    } else {
+      return (
+        <View style={[styles.loader]}>
+          <ActivityIndicator size="large" color="#57B5DB" />
+        </View>
+      )
+    }
+    
+  }
 }
 
 const styles = StyleSheet.create({
