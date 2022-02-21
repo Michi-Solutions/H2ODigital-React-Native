@@ -19,6 +19,7 @@ export default class DashboardScreen extends Component {
       data: "No data",
       nome: "No data",
       edificio: "No data",
+      reservatorio: "No data",
       isLoading: true,
     }
 
@@ -45,9 +46,9 @@ export default class DashboardScreen extends Component {
         
         if (response.status === 200) {
           this.setState({data: await response.json()})
-          console.log(Object.keys(this.state.data.leiturasTemporais))
+          const nomeReservatorio = Object.keys(this.state.data.leiturasTemporais)[1]
+          this.setState({reservatorio: await this.state.data.leiturasTemporais[nomeReservatorio]}) 
           this.setState({isLoading: false})
-          console.log(response.status)
         } else if (response.status === 403) {
           setTimeout(() => {console.log('espera ai')}, 10000);
         } else {
@@ -59,6 +60,8 @@ export default class DashboardScreen extends Component {
   }
 
   render() {
+
+    console.log(JSON.parse(JSON.stringify(this.state.reservatorio[0])))
     
     if (this.state.isLoading == false){
       return (
@@ -67,7 +70,11 @@ export default class DashboardScreen extends Component {
           <Text style={styles.welcome}>
             {this.state.edificio}
           </Text>
-          {/* <DashboardComponent nome={this.state.data[0][0].reservatorio.nome}/> */}
+          <DashboardComponent nome={Object.keys(this.state.data.leiturasTemporais)[0]}
+                              volumeTotal={JSON.parse(JSON.stringify(this.state.reservatorio[0].volumeMaximoFormatado))}
+                              percentual={JSON.parse(JSON.stringify(this.state.reservatorio[0].percentual))}
+                              ultimaLeitura={JSON.parse(JSON.stringify(this.state.reservatorio[0].dataUltimaLeituraFormatada))}
+                              percentualGrafico={JSON.parse(JSON.stringify(this.state.reservatorio[0].percentual))}/>
         </View>
       )
     } else {
