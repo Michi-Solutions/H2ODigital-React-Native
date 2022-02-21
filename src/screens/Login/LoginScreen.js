@@ -38,14 +38,14 @@ export default class DashboardScreen extends Component {
         if (response.status === 200) {
           this.setState({userData: await response.json()})
           this.setState({formError: "Ok"})
-          // if (this.state.userData.resultados != undefined) {
-          //   this.props.navigation.navigate('Dashboard', {
-          //     id: this.state.userData.resultados[0].id,
-          //     name: this.state.userData.resultados[0].nome,
-          //     email: this.state.email,
-          //     password: this.state.password
-          //   })
-          // }
+          if (this.state.userData.resultados != undefined) {
+            this.props.navigation.navigate('Dashboard', {
+              id: this.state.userData.resultados[0].id,
+              name: this.state.userData.resultados[0].nome,
+              email: this.state.email,
+              password: this.state.password
+            })
+          }
 
         } else if (response.status === 403) {
           this.setState({formError: "Tente novamente mais tarde"})
