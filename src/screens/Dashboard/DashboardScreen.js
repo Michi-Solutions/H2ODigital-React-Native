@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import {decode, encode} from 'base-64'
 import DashboardComponent from './DashboardComponent'
 
@@ -19,14 +19,15 @@ export default class DashboardScreen extends Component {
       data: "No data",
       nome: "No data",
       edificio: "No data",
-      reservatorio: "No data",
+      reservatorios: "No data",
       isLoading: true,
     }
 
     
   }
-
+  
   async componentDidMount() {
+
     const {...user} = this.props.route.params
 
     this.setState({edificio: user.name})
@@ -46,13 +47,13 @@ export default class DashboardScreen extends Component {
         
         if (response.status === 200) {
           this.setState({data: await response.json()})
-          const nomeReservatorio = Object.keys(this.state.data.leiturasTemporais)[1]
-          this.setState({reservatorio: await this.state.data.leiturasTemporais[nomeReservatorio]}) 
+
+          this.setState({reservatorios: await Object.keys(this.state.data.leiturasTemporais)}) 
           this.setState({isLoading: false})
         } else if (response.status === 403) {
-          setTimeout(() => {console.log('espera ai')}, 10000);
+          await new Promise(resolve => setTimeout(resolve, 10000)); // 10 sec
+          console.log(response.status)
         } else {
-          console.log('error')
           console.log(response.status)
         }
       })
@@ -60,8 +61,6 @@ export default class DashboardScreen extends Component {
   }
 
   render() {
-
-    console.log(JSON.parse(JSON.stringify(this.state.reservatorio[0])))
     
     if (this.state.isLoading == false){
       return (
@@ -70,11 +69,25 @@ export default class DashboardScreen extends Component {
           <Text style={styles.welcome}>
             {this.state.edificio}
           </Text>
-          <DashboardComponent nome={Object.keys(this.state.data.leiturasTemporais)[0]}
-                              volumeTotal={JSON.parse(JSON.stringify(this.state.reservatorio[0].volumeMaximoFormatado))}
-                              percentual={JSON.parse(JSON.stringify(this.state.reservatorio[0].percentual))}
-                              ultimaLeitura={JSON.parse(JSON.stringify(this.state.reservatorio[0].dataUltimaLeituraFormatada))}
-                              percentualGrafico={JSON.parse(JSON.stringify(this.state.reservatorio[0].percentual))}/>
+          
+          <FlatList data={this.state.reservatorios}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={() => this.props.navigation.navigate("Graph", {
+                        hora: this.state.data.leiturasTemporais[item],
+                        dados: this.state.data.leiturasTemporais[item],
+                        volumeMaximo : [parseInt(this.state.data.leiturasTemporais[item][14].volumeMaximoFormatado)],
+                        nome: this.state.data.leiturasTemporais[item][14].reservatorio.nome
+                      })}>
+                        <DashboardComponent
+                                nome={this.state.data.leiturasTemporais[item][14].reservatorio.nome}
+                                volumeTotal={this.state.data.leiturasTemporais[item][14].volumeMaximoFormatado}
+                                percentual={this.state.data.leiturasTemporais[item][14].percentual}
+                                ultimaLeitura={this.state.data.leiturasTemporais[item][14].dataUltimaLeituraFormatada}
+                                percentualGrafico={this.state.data.leiturasTemporais[item][14].percentual}/>
+                      </TouchableOpacity>
+                    )}>
+
+          </FlatList>
         </View>
       )
     } else {
