@@ -16,7 +16,6 @@ import {
 import * as shape from 'd3-shape';
 
 function LineChartExample(props) {
-    console.log(props)
     useEffect(() => {
         setDateList(props.horaGrafico)
         setPriceList(props.numerosGrafico)
