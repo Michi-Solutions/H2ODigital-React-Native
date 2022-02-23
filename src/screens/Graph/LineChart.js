@@ -1,4 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { LogBox } from 'react-native';
+
 // import * as React from 'react'
 import {
     PanResponder,
@@ -13,11 +15,17 @@ import {
 } from 'react-native-svg';
 import * as shape from 'd3-shape';
 
-function LineChartExample() {
+function LineChartExample(props) {
+    console.log(props)
+    useEffect(() => {
+        setDateList(props.horaGrafico)
+        setPriceList(props.numerosGrafico)
+    })
     const apx = (size = 0) => {
         let width = Dimensions.get('window').width;
         return (width / 830) * size;
     };
+
 
     const [dateList, setDateList] = useState([
         '05:00',
@@ -27,19 +35,19 @@ function LineChartExample() {
         '10:00',
     ]);
     const [priceList, setPriceList] = useState([
-        40,
-        43,
-        50,
-        48,
-        45,
+        22,
+        21,
+        22,
+        23,
+        24,
     ]);
     const size = useRef(dateList.length);
+
 
     const [positionX, setPositionX] = useState(-1);// The currently selected X coordinate position
 
     const panResponder = useRef(
         PanResponder.create({
-            // 要求成为响应者：
             onStartShouldSetPanResponder: (evt, gestureState) => true,
             onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
             onMoveShouldSetPanResponder: (evt, gestureState) => true,
@@ -140,7 +148,8 @@ function LineChartExample() {
                         contentInset={{ ...verticalContentInset }}
                         svg={{ fill: 'rgba(166, 206, 227, 0.8)' }}
                         gridMin={0}
-                        gridMax={70}>
+
+                        gridMax={props.volumeMaximo}>
                         <CustomGrid/>
                     </AreaChart>
                 </View>
@@ -152,7 +161,8 @@ function LineChartExample() {
                     svg={{ fontSize: apx(30), fill: '#A3A3A3' }}
                     numberOfTicks={5}
                     min={0}
-                    max={70}
+
+                    max={props.volumeMaximo}
                 />
             </View>
         

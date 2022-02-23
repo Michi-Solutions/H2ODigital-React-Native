@@ -1,24 +1,61 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, {Component} from 'react';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import LineChartExample from './LineChart'
 
-export default function GraphScreen() {
-    return (
-        <View style={styles.component}>
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.goBack}>
-                    <View style={styles.triangle}/>
-                    <Text style={styles.goBackText}>Voltar</Text>
-                </TouchableOpacity>
+export default class GraphScreen extends Component {
 
-                <Text style={styles.title}>Reservatório 1</Text>
-                <Text style={styles.graphTitle}>Últimas Horas</Text>
-                <LineChartExample/>
+    constructor(props){
+      super(props);
+      this.state = {
+        dados: "",
+        hora: "",
+        valorMax: 0,
+        nome: ""
+      }
+    }
+
+    componentDidMount() {
+      const {...data} = this.props.route.params
+
+      const formatedHour = [
+        data.dados[10].horaUltimaLeituraFormatada,
+        data.dados[11].horaUltimaLeituraFormatada,
+        data.dados[12].horaUltimaLeituraFormatada,
+        data.dados[13].horaUltimaLeituraFormatada,
+        data.dados[14].horaUltimaLeituraFormatada
+      ]
+
+      const formatedData = [
+        parseInt(data.dados[10].valorAtual/1000),
+        parseInt(data.dados[11].valorAtual/1000),
+        parseInt(data.dados[12].valorAtual/1000),
+        parseInt(data.dados[13].valorAtual/1000),
+        parseInt(data.dados[14].valorAtual/1000)
+      ]
+
+      this.setState({dados: formatedData})
+      this.setState({hora: formatedHour})
+      this.setState({valorMax: data.volumeMaximo})
+      this.setState({nome: data.nome})
+    }
+
+    render() {
+      
+      return (
+            <View style={styles.component}>
+                <View style={styles.container}>
+                    <TouchableOpacity style={styles.goBack} onPress={() => this.props.navigation.navigate("Dashboard")}>
+                        <View style={styles.triangle}/>
+                        <Text style={styles.goBackText}>Voltar</Text>
+                    </TouchableOpacity>
+
+                    <Text style={styles.title}>{this.state.nome}</Text>
+                    <Text style={styles.graphTitle}>Últimas Horas</Text>
+                    <LineChartExample horaGrafico={this.state.hora} numerosGrafico={this.state.dados} volumeMaximo={this.state.valorMax}/>
+                </View>
             </View>
-            
-        </View>
-      )
+        )
+    }
   }
   
   const styles = StyleSheet.create({
@@ -31,6 +68,7 @@ export default function GraphScreen() {
         },
         container: {
           width: '85%',
+          paddingTop: 30
         },
         triangle: {
           width: 0,
@@ -68,4 +106,3 @@ export default function GraphScreen() {
           marginTop: 30,
         }
   });
-
