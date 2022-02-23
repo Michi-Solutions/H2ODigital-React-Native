@@ -53,7 +53,7 @@ export default class DashboardScreen extends Component {
           this.setState({isLoading: false})
         } else if (response.status === 403) {
           this.setState({tentativas: this.state.tentativas + 1 })
-          if (this.state.tentativas >= 5) {
+          if (this.state.tentativas >= 3) {
             this.props.navigation.navigate("Error")
           }
           await new Promise(resolve => setTimeout(resolve, 10000)); // 10 sec
