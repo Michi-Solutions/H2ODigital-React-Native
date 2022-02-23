@@ -54,7 +54,7 @@ export default class DashboardScreen extends Component {
             this.Login()
             this.setState({tentativas: this.state.tentativas + 1 })
           }
-          if (this.state.tentativas <= 5) {
+          if (this.state.tentativas >= 5) {
             this.setState({formError: "Usuário ou senha incorretos"})
           }
         }
