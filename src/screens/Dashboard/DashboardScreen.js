@@ -21,6 +21,7 @@ export default class DashboardScreen extends Component {
       edificio: "No data",
       reservatorios: "No data",
       isLoading: true,
+      tentativas: 0
     }
 
     
@@ -51,6 +52,10 @@ export default class DashboardScreen extends Component {
           this.setState({reservatorios: await Object.keys(this.state.data.leiturasTemporais)}) 
           this.setState({isLoading: false})
         } else if (response.status === 403) {
+          this.setState({tentativas: this.state.tentativas + 1 })
+          if (this.state.tentativas >= 5) {
+            this.props.navigation.navigate("Error")
+          }
           await new Promise(resolve => setTimeout(resolve, 10000)); // 10 sec
           console.log(response.status)
         } else {
