@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity, Image } from 'react-native';
 
+
 export default class ErrorScreen extends Component {
   render() {
     return(
@@ -17,7 +18,9 @@ export default class ErrorScreen extends Component {
             <Text style={styles.message}>Oops!</Text>
             <Text style={styles.paragraf}>Ocorreu um erro durante o carregamento</Text>
             
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={() => this.props.navigation.navigate("Login")}>
                 <Text style={styles.buttonText}>Tentar Novamente</Text>
             </TouchableOpacity>
         </View>
