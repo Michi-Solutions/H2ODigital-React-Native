@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity, Image } from 'react-native';
 
-export default class DashboardScreen extends Component {
+export default class DashboardComponent extends Component {
   render() {
     return(
       <View style={styles.component}>
@@ -17,7 +17,9 @@ export default class DashboardScreen extends Component {
             <Text style={styles.message}>Oops!</Text>
             <Text style={styles.paragraf}>Ocorreu um erro durante o carregamento</Text>
             
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={() => this.props.navigation.navigate("Login")}>
                 <Text style={styles.buttonText}>Tentar Novamente</Text>
             </TouchableOpacity>
         </View>
