@@ -56,7 +56,7 @@ export default class DashboardScreen extends Component {
           if (this.state.tentativas >= 3) {
             this.props.navigation.navigate("Error")
           }
-          await new Promise(resolve => setTimeout(resolve, 10000)); // 10 sec
+          await new Promise(resolve => setTimeout(resolve, 7000)); // 10 sec
           console.log(response.status)
         } else {
           console.log(response.status)
