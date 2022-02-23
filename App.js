@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, LogBox } from 'react-native';
 import LoginScreen from './src/screens/Login/LoginScreen';
 import DashboardScreen from './src/screens/Dashboard/DashboardScreen';
+import GraphScreen from './src/screens/Graph/GraphScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+LogBox.ignoreLogs(['Warning: ...']);
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +23,15 @@ export default class App extends Component {
         <Stack.Screen 
           name="Dashboard" 
           component={DashboardScreen} />
+
+        <Stack.Screen 
+          name="Graph" 
+          component={GraphScreen}
+          navigation={this.props.navigation}/>
       </Stack.Navigator>
+      
     </NavigationContainer>
+    
     )
   }
 }
