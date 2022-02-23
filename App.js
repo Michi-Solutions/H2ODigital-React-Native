@@ -3,6 +3,7 @@ import { View, StyleSheet, LogBox } from 'react-native';
 import LoginScreen from './src/screens/Login/LoginScreen';
 import DashboardScreen from './src/screens/Dashboard/DashboardScreen';
 import GraphScreen from './src/screens/Graph/GraphScreen';
+import ErrorScreen from './src/screens/Error/ErrorScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -18,16 +19,17 @@ export default class App extends Component {
         screenOptions={{headerShown: false}}>
         <Stack.Screen
           name="Login"
-          component={LoginScreen}
-        />
+          component={LoginScreen}/>
         <Stack.Screen 
           name="Dashboard" 
-          component={DashboardScreen} />
-
+          component={DashboardScreen}/>
         <Stack.Screen 
           name="Graph" 
           component={GraphScreen}
           navigation={this.props.navigation}/>
+        <Stack.Screen
+          name="Error"
+          component={ErrorScreen}/>
       </Stack.Navigator>
       
     </NavigationContainer>
