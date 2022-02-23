@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity, Image } from 'react-native';
 
-export default class DashboardComponent extends Component {
+
+export default class ErrorScreen extends Component {
   render() {
     return(
       <View style={styles.component}>
