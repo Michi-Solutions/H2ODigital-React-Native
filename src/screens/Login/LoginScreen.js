@@ -16,6 +16,8 @@ export default class DashboardScreen extends Component {
     super(props)
     this.state = {
       formError: [],
+      ids: [],
+      names: [],
       userData: '',
       email: '',
       password: '',
@@ -38,9 +40,14 @@ export default class DashboardScreen extends Component {
           this.setState({userData: await response.json()})
 
           if (this.state.userData.resultados != undefined) {
+            for(let index = 0; index < this.state.userData.resultados.length; index++){
+              this.state.ids.push(this.state.userData.resultados[index].id)
+              this.state.names.push(this.state.userData.resultados[index].nome)
+            }
+            
             this.props.navigation.navigate('Dashboard', {
-              id: this.state.userData.resultados[0].id,
-              name: this.state.userData.resultados[0].nome,
+              resIds: this.state.ids,
+              resNames: this.state.names,
               email: this.state.email,
               password: this.state.password
             })
