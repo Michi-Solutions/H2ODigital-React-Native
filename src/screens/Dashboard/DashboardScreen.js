@@ -47,7 +47,7 @@ export default class DashboardScreen extends Component {
 
             if (this.state.data[0] === "No data" && user.resIds[index] === user.resIds[0]){
               this.setState({data: [json]})
-            } else {
+            } else if (this.state.data[0] != "No data") {
               this.state.data.push(json)
             }
 
@@ -65,18 +65,17 @@ export default class DashboardScreen extends Component {
       }
     }
     console.log('carregou')
-
     for (let index = 0; index < this.state.data.length; index++){
       for (let res = 0; res < Object.keys(this.state.data[index].leiturasTemporais).length; res++){
         if (this.state.ultimasLeituras[0] === "No data"){
-          this.setState({ultimasLeituras: [this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14].reservatorio]})
+          this.setState({ultimasLeituras: [this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14]]})
         } else {
-          this.state.ultimasLeituras.push(this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14].reservatorio)
+          this.state.ultimasLeituras.push(this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14])
         }
         
       }      
     }
-    console.log(this.state.ultimasLeituras[1].nome)
+    console.log(this.state.ultimasLeituras[1].reservatorio)
   }
 
   render() {
