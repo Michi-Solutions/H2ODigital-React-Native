@@ -16,12 +16,10 @@ export default class DashboardScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: "No data",
-      nome: "No data",
-      edificio: "No data",
-      reservatorios: "No data",
+      data: ["No data"],
+      ultimasLeituras: ["No data"],
+      reservatorios: [],
       isLoading: true,
-      tentativas: 0
     }
 
     
@@ -30,78 +28,64 @@ export default class DashboardScreen extends Component {
   async componentDidMount() {
 
     const {...user} = this.props.route.params
-
     this.setState({edificio: user.name})
 
     while (this.state.isLoading == true) {
-      
-      await fetch(`http://h2odigital.com.br/api/dashboard/${user.id}`,{ 
-        method: 'get', 
-        headers: new Headers({
-          'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'cache-control': 'no-store',
-          'pragma': 'no-cache'
-        }) 
-      })
-      .then(async (response) => {
-        
-        if (response.status === 200) {
-          this.setState({data: await response.json()})
+      for (let index = 0; index < user.resIds.length; index++){
+        console.log('id: ',user.resIds[index])
+        await fetch(`http://h2odigital.com.br/api/dashboard/${user.resIds[index]}`,{ 
+          method: 'get', 
+          headers: new Headers({
+            'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
+            'Content-Type': 'application/x-www-form-urlencoded'
+          })
+        })
+        .then(async (response) => {
+          if (response.status === 200) {
+            let json = await response.json()
+            await new Promise(resolve => setTimeout(resolve, 500)) // 0.5 sec
 
-          this.setState({reservatorios: await Object.keys(this.state.data.leiturasTemporais)}) 
-          this.setState({isLoading: false})
-        } else if (response.status === 403) {
-          this.setState({tentativas: this.state.tentativas + 1 })
-          if (this.state.tentativas >= 5) {
-            this.props.navigation.navigate("Error")
+            if (this.state.data[0] === "No data" && user.resIds[index] === user.resIds[0]){
+              this.setState({data: [json]})
+            } else {
+              this.state.data.push(json)
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 500)) // 0.5 sec
+            console.log(this.state.data.length, user.resIds.length)
+            if (user.resIds.length === this.state.data.length ){
+              this.setState({isLoading: false})
+            }
+            console.log(this.state.data)
+          } else {
+            index = 0
+            console.log('status: ',response.status)
           }
-          await new Promise(resolve => setTimeout(resolve, 10000)) // 10 sec
-        } else {
-          await new Promise(resolve => setTimeout(resolve, 500)) // 0.5 sec
-        }
-      })
+        })
+      }
     }
+    console.log('carregou')
+
+    for (let index = 0; index < this.state.data.length; index++){
+      for (let res = 0; res < Object.keys(this.state.data[index].leiturasTemporais).length; res++){
+        if (this.state.ultimasLeituras[0] === "No data"){
+          this.setState({ultimasLeituras: [this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14].reservatorio]})
+        } else {
+          this.state.ultimasLeituras.push(this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14].reservatorio)
+        }
+        
+      }      
+    }
+    console.log(this.state.ultimasLeituras[1].nome)
   }
 
   render() {
     
-    if (this.state.isLoading == false){
-      return (
-        
-        <View style={styles.container}>
-          <Text style={styles.welcome}>
-            {this.state.edificio}
-          </Text>
-          
-          <FlatList data={this.state.reservatorios}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => this.props.navigation.navigate("Graph", {
-                        hora: this.state.data.leiturasTemporais[item],
-                        dados: this.state.data.leiturasTemporais[item],
-                        volumeMaximo : [parseInt(this.state.data.leiturasTemporais[item][14].volumeMaximoFormatado)],
-                        nome: this.state.data.leiturasTemporais[item][14].reservatorio.nome
-                      })}>
-                        <DashboardComponent
-                                nome={this.state.data.leiturasTemporais[item][14].reservatorio.nome}
-                                volumeTotal={this.state.data.leiturasTemporais[item][14].volumeMaximoFormatado}
-                                percentual={this.state.data.leiturasTemporais[item][14].percentual}
-                                ultimaLeitura={this.state.data.leiturasTemporais[item][14].dataUltimaLeituraFormatada}
-                                percentualGrafico={this.state.data.leiturasTemporais[item][14].percentual}/>
-                      </TouchableOpacity>
-                    )}>
-
-          </FlatList>
-        </View>
-      )
-    } else {
-      return (
-        <View style={[styles.loader]}>
-          <ActivityIndicator size="large" color="#57B5DB" />
-        </View>
-      )
-    }
-    
+    return (
+          <View style={[styles.loader]}>
+            <ActivityIndicator size="large" color="#57B5DB" />
+          </View>
+        )
   }
 }
 
