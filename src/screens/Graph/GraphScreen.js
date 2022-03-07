@@ -17,26 +17,30 @@ export default class GraphScreen extends Component {
     componentDidMount() {
       const {...data} = this.props.route.params
 
+      const tankName = Object.keys(data.dados)[0]
+
+      console.log(data.dados[tankName][0].reservatorio.id)
+
       const formatedHour = [
-        data.dados[10].horaUltimaLeituraFormatada,
-        data.dados[11].horaUltimaLeituraFormatada,
-        data.dados[12].horaUltimaLeituraFormatada,
-        data.dados[13].horaUltimaLeituraFormatada,
-        data.dados[14].horaUltimaLeituraFormatada
+        data.dados[tankName][10].horaUltimaLeituraFormatada,
+        data.dados[tankName][11].horaUltimaLeituraFormatada,
+        data.dados[tankName][12].horaUltimaLeituraFormatada,
+        data.dados[tankName][13].horaUltimaLeituraFormatada,
+        data.dados[tankName][14].horaUltimaLeituraFormatada,
       ]
 
       const formatedData = [
-        parseInt(data.dados[10].valorAtual/1000),
-        parseInt(data.dados[11].valorAtual/1000),
-        parseInt(data.dados[12].valorAtual/1000),
-        parseInt(data.dados[13].valorAtual/1000),
-        parseInt(data.dados[14].valorAtual/1000)
+        parseInt(data.dados[tankName][10].valorAtual/1000),
+        parseInt(data.dados[tankName][11].valorAtual/1000),
+        parseInt(data.dados[tankName][12].valorAtual/1000),
+        parseInt(data.dados[tankName][13].valorAtual/1000),
+        parseInt(data.dados[tankName][14].valorAtual/1000)
       ]
 
       this.setState({dados: formatedData})
       this.setState({hora: formatedHour})
-      this.setState({valorMax: data.volumeMaximo})
-      this.setState({nome: data.nome})
+      this.setState({valorMax: parseInt(data.dados[tankName][14].volumeMaximoFormatado)})
+      this.setState({nome: data.dados[tankName][14].reservatorio.nome})
     }
 
     render() {
