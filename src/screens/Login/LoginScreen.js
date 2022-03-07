@@ -37,14 +37,14 @@ export default class DashboardScreen extends Component {
       })
       .then(async (response) => {
         if (response.status === 200) {
-          this.setState({userData: await response.json()})
 
+          this.setState({userData: await response.json()})
           if (this.state.userData.resultados != undefined) {
             for(let index = 0; index < this.state.userData.resultados.length; index++){
               this.state.ids.push(this.state.userData.resultados[index].id)
               this.state.names.push(this.state.userData.resultados[index].nome)
             }
-            
+
             this.props.navigation.navigate('Dashboard', {
               resIds: this.state.ids,
               resNames: this.state.names,
@@ -54,15 +54,19 @@ export default class DashboardScreen extends Component {
           }
 
         } else if (response.status === 403) {
+          console.log('dentro 403',this.state.userData.length)
           this.setState({formError: "Tente novamente mais tarde"})
         } else {
           
           while (this.state.tentativas <= 5) {
-            console.log('aaa')
+            if (this.state.userData != ''){
+              this.setState({userData: ''})
+            }
             this.Login()
             this.setState({tentativas: this.state.tentativas + 1 })
           }
           if (this.state.tentativas > 4) {
+            
             this.setState({formError: "Usuário ou senha incorretos"})
           }
         }
