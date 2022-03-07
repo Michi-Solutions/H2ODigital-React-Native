@@ -58,6 +58,7 @@ export default class DashboardScreen extends Component {
         } else {
           
           while (this.state.tentativas <= 5) {
+            console.log('aaa')
             this.Login()
             this.setState({tentativas: this.state.tentativas + 1 })
           }
