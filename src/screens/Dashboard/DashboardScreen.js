@@ -18,10 +18,10 @@ export default class DashboardScreen extends Component {
     this.state = {
       data: ["No data"],
       ultimasLeituras: ["No data"],
-      reservatorios: [],
       isLoading: true,
     }
 
+    
     
   }
   
@@ -56,7 +56,7 @@ export default class DashboardScreen extends Component {
             if (user.resIds.length === this.state.data.length ){
               this.setState({isLoading: false})
             }
-            console.log(this.state.data)
+            // console.log(this.state.data)
           } else {
             index = 0
             console.log('status: ',response.status)
@@ -75,16 +75,49 @@ export default class DashboardScreen extends Component {
         
       }      
     }
-    console.log(this.state.ultimasLeituras[1].reservatorio)
+    console.log("..", this.state.data[0].leiturasAtuais[0].reservatorio.id)
   }
 
   render() {
+
     
-    return (
-          <View style={[styles.loader]}>
-            <ActivityIndicator size="large" color="#57B5DB" />
+    if (this.state.isLoading == false){
+      let a = this.state.data
+      console.log(a)
+        return (
+        
+          <View style={styles.container}>
+            <Text style={styles.welcome}>
+              {this.state.edificio}
+            </Text>
+  
+            {this.state.data.map(item =>
+            <TouchableOpacity key={item.leiturasAtuais[0].reservatorio.id} onPress={() => this.props.navigation.navigate("Graph", {
+              hora: item.leiturasTemporais,
+              dados: item.leiturasTemporais,
+              volumeMaximo : [parseInt(item.leiturasTemporais)],
+              nome: item.leiturasTemporais
+            })}>
+                <DashboardComponent 
+                  nome={item.leiturasAtuais[0].reservatorio.nome}
+                  volumeTotal={item.leiturasAtuais[0].volumeMaximoFormatado}
+                  percentual={item.leiturasAtuais[0].percentual}
+                  ultimaLeitura={item.leiturasAtuais[0].dataUltimaLeituraFormatada}
+                  percentualGrafico={item.leiturasAtuais[0].percentual}/>
+            </TouchableOpacity>
+            )}
+            
+              
           </View>
         )
+    } else {
+      return (
+        <View style={[styles.loader]}>
+          <ActivityIndicator size="large" color="#57B5DB" />
+        </View>
+      )
+    }
+    
   }
 }
 
