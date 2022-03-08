@@ -17,30 +17,31 @@ export default class GraphScreen extends Component {
     componentDidMount() {
       const {...data} = this.props.route.params
 
-      const tankName = Object.keys(data.dados)[0]
 
-      console.log(data.dados[tankName][0].reservatorio.id)
+      const allData = data.dados[0].leiturasTemporais
 
-      const formatedHour = [
-        data.dados[tankName][10].horaUltimaLeituraFormatada,
-        data.dados[tankName][11].horaUltimaLeituraFormatada,
-        data.dados[tankName][12].horaUltimaLeituraFormatada,
-        data.dados[tankName][13].horaUltimaLeituraFormatada,
-        data.dados[tankName][14].horaUltimaLeituraFormatada,
-      ]
+      console.log(allData)
 
-      const formatedData = [
-        parseInt(data.dados[tankName][10].valorAtual/1000),
-        parseInt(data.dados[tankName][11].valorAtual/1000),
-        parseInt(data.dados[tankName][12].valorAtual/1000),
-        parseInt(data.dados[tankName][13].valorAtual/1000),
-        parseInt(data.dados[tankName][14].valorAtual/1000)
-      ]
+      // const formatedHour = [
+      //   data.dados[tankName][10].horaUltimaLeituraFormatada,
+      //   data.dados[tankName][11].horaUltimaLeituraFormatada,
+      //   data.dados[tankName][12].horaUltimaLeituraFormatada,
+      //   data.dados[tankName][13].horaUltimaLeituraFormatada,
+      //   data.dados[tankName][14].horaUltimaLeituraFormatada,
+      // ]
 
-      this.setState({dados: formatedData})
-      this.setState({hora: formatedHour})
-      this.setState({valorMax: parseInt(data.dados[tankName][14].volumeMaximoFormatado)})
-      this.setState({nome: data.dados[tankName][14].reservatorio.nome})
+      // const formatedData = [
+      //   parseInt(data.dados[tankName][10].valorAtual/1000),
+      //   parseInt(data.dados[tankName][11].valorAtual/1000),
+      //   parseInt(data.dados[tankName][12].valorAtual/1000),
+      //   parseInt(data.dados[tankName][13].valorAtual/1000),
+      //   parseInt(data.dados[tankName][14].valorAtual/1000)
+      // ]
+
+      // this.setState({dados: formatedData})
+      // this.setState({hora: formatedHour})
+      // this.setState({valorMax: parseInt(data.dados[tankName][14].volumeMaximoFormatado)})
+      // this.setState({nome: data.dados[tankName][14].reservatorio.nome})
     }
 
     render() {
