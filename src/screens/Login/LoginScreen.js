@@ -26,6 +26,7 @@ export default class DashboardScreen extends Component {
   }
 
   Login = () => {
+    this.setState({userData: undefined})
     fetch(`http://www.h2odigital.com.br/api/estabelecimento/filtrar/1`,{
         method: 'get', 
         headers: new Headers({
@@ -39,29 +40,39 @@ export default class DashboardScreen extends Component {
         if (response.status === 200) {
 
           this.setState({userData: await response.json()})
+          console.log('.')
           if (this.state.userData.resultados != undefined) {
+            console.log('..')
+            console.log(this.state.userData.resultados.length, this.state.userData.resultados)
             for(let index = 0; index < this.state.userData.resultados.length; index++){
-              this.state.ids.push(this.state.userData.resultados[index].id)
-              this.state.names.push(this.state.userData.resultados[index].nome)
+              console.log(this.state.userData.resultados[index].id, this.state.ids, !(this.state.userData.resultados[index].id in this.state.ids))
+              if(!(this.state.userData.resultados[index].id in this.state.ids)){
+                this.state.ids.push(this.state.userData.resultados[index].id)
+              }
+              if(!(this.state.userData.resultados[index].nome in this.state.names)){
+                this.state.names.push(this.state.userData.resultados[index].nome)
+              }
             }
+            console.log(this.state.ids)
 
+            // unique key
+            let uniqueIds = [...new Set(this.state.ids)]
+            let uniqueNames = [...new Set(this.state.names)]
+            
+            console.log('ids unicos',uniqueIds)
             this.props.navigation.navigate('Dashboard', {
-              resIds: this.state.ids,
-              resNames: this.state.names,
+              resIds: uniqueIds,
+              resNames: uniqueNames,
               email: this.state.email,
               password: this.state.password
             })
           }
 
         } else if (response.status === 403) {
-          console.log('dentro 403',this.state.userData.length)
           this.setState({formError: "Tente novamente mais tarde"})
         } else {
           
           while (this.state.tentativas <= 5) {
-            if (this.state.userData != ''){
-              this.setState({userData: ''})
-            }
             this.Login()
             this.setState({tentativas: this.state.tentativas + 1 })
           }
