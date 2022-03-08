@@ -16,8 +16,8 @@ export default class DashboardScreen extends Component {
     super(props)
     this.state = {
       formError: [],
-      ids: [],
-      names: [],
+      estabelecimentoIds: [],
+      estabelecimentoNames: [],
       userData: '',
       email: '',
       password: '',
@@ -26,6 +26,7 @@ export default class DashboardScreen extends Component {
   }
 
   Login = () => {
+    this.setState({userData: undefined})
     fetch(`http://www.h2odigital.com.br/api/estabelecimento/filtrar/1`,{
         method: 'get', 
         headers: new Headers({
@@ -37,17 +38,20 @@ export default class DashboardScreen extends Component {
       })
       .then(async (response) => {
         if (response.status === 200) {
-          this.setState({userData: await response.json()})
 
+          this.setState({userData: await response.json()})
           if (this.state.userData.resultados != undefined) {
             for(let index = 0; index < this.state.userData.resultados.length; index++){
-              this.state.ids.push(this.state.userData.resultados[index].id)
-              this.state.names.push(this.state.userData.resultados[index].nome)
+              this.state.estabelecimentoIds.push(this.state.userData.resultados[index].id)
+              this.state.estabelecimentoNames.push(this.state.userData.resultados[index].nome)
             }
-            
+            // unique key
+            let uniqueEstabelecimentoIds = [...new Set(this.state.estabelecimentoIds)]
+            let uniqueEstabelecimentoNames = [...new Set(this.state.estabelecimentoNames)]
+
             this.props.navigation.navigate('Dashboard', {
-              resIds: this.state.ids,
-              resNames: this.state.names,
+              resIds: uniqueEstabelecimentoIds,
+              resNames: uniqueEstabelecimentoNames,
               email: this.state.email,
               password: this.state.password
             })
@@ -58,11 +62,11 @@ export default class DashboardScreen extends Component {
         } else {
           
           while (this.state.tentativas <= 5) {
-            console.log('aaa')
             this.Login()
             this.setState({tentativas: this.state.tentativas + 1 })
           }
           if (this.state.tentativas > 4) {
+            
             this.setState({formError: "Usuário ou senha incorretos"})
           }
         }
