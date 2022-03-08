@@ -75,24 +75,24 @@ export default class DashboardScreen extends Component {
       }      
     }
     // console.log("..", this.state.ultimasLeituras[0])
+    console.log(this.state.data)
   }
 
   render() {
     
     if (this.state.isLoading == false){
       let a = this.state.ultimasLeituras
-      console.log('....................................................................................................................',a)
         return (
         
         <ScrollView>
           <View style={styles.container}>
             <Text style={styles.welcome}>
-              {this.state.edificio}
+              
             </Text>
   
             {this.state.ultimasLeituras.map(item =>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("Graph", {
-              dados: this.state.data,
+            <TouchableOpacity key={item[14].reservatorio.id} onPress={() => this.props.navigation.navigate("Graph", {
+              dados: item,
               volumeMaximo : [parseInt(item)],
               nome: item
             })}>
