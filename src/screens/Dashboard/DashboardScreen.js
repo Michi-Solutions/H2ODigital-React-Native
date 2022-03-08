@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import {decode, encode} from 'base-64'
 import DashboardComponent from './DashboardComponent'
 
@@ -17,7 +17,7 @@ export default class DashboardScreen extends Component {
     super(props)
     this.state = {
       data: ["No data"],
-      ultimasLeituras: ["No data"],
+      ultimasLeituras: [],
       isLoading: true,
     }
 
@@ -64,51 +64,51 @@ export default class DashboardScreen extends Component {
         })
       }
     }
+    
     console.log('carregou')
     for (let index = 0; index < this.state.data.length; index++){
       for (let res = 0; res < Object.keys(this.state.data[index].leiturasTemporais).length; res++){
-        if (this.state.ultimasLeituras[0] === "No data"){
-          this.setState({ultimasLeituras: [this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14]]})
-        } else {
-          this.state.ultimasLeituras.push(this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14])
-        }
-        
+        const currentStateCopy = [...this.state.ultimasLeituras]
+        currentStateCopy.push(this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]])
+        this.setState({ultimasLeituras: currentStateCopy})
+        // console.log(currentStateCopy)
       }      
     }
-    console.log("..", this.state.data[0].leiturasAtuais[0].reservatorio.id)
+    // console.log("..", this.state.ultimasLeituras[0])
   }
 
   render() {
-
     
     if (this.state.isLoading == false){
-      let a = this.state.data
-      console.log(a)
+      let a = this.state.ultimasLeituras
+      console.log('....................................................................................................................',a)
         return (
         
+        <ScrollView>
           <View style={styles.container}>
             <Text style={styles.welcome}>
               {this.state.edificio}
             </Text>
   
-            {this.state.data.map(item =>
-            <TouchableOpacity key={item.leiturasAtuais[0].reservatorio.id} onPress={() => this.props.navigation.navigate("Graph", {
-              hora: item.leiturasTemporais,
-              dados: item.leiturasTemporais,
-              volumeMaximo : [parseInt(item.leiturasTemporais)],
-              nome: item.leiturasTemporais
+            {this.state.ultimasLeituras.map(item =>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Graph", {
+              dados: this.state.data,
+              volumeMaximo : [parseInt(item)],
+              nome: item
             })}>
                 <DashboardComponent 
-                  nome={item.leiturasAtuais[0].reservatorio.nome}
-                  volumeTotal={item.leiturasAtuais[0].volumeMaximoFormatado}
-                  percentual={item.leiturasAtuais[0].percentual}
-                  ultimaLeitura={item.leiturasAtuais[0].dataUltimaLeituraFormatada}
-                  percentualGrafico={item.leiturasAtuais[0].percentual}/>
+                  nome={item[14].reservatorio.nome} 
+                  volumeTotal={item[14].volumeMaximoFormatado}
+                  percentual={item[14].percentual}
+                  ultimaLeitura={item[14].dataUltimaLeituraFormatada}
+                  percentualGrafico={item[14].percentual}
+                  />
             </TouchableOpacity>
             )}
             
               
           </View>
+        </ScrollView>
         )
     } else {
       return (
