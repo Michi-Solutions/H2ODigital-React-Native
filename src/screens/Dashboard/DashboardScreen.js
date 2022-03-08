@@ -69,40 +69,39 @@ export default class DashboardScreen extends Component {
     for (let index = 0; index < this.state.data.length; index++){
       for (let res = 0; res < Object.keys(this.state.data[index].leiturasTemporais).length; res++){
         const currentStateCopy = [...this.state.ultimasLeituras]
-        currentStateCopy.push(this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]][14])
+        currentStateCopy.push(this.state.data[index].leiturasTemporais[Object.keys(this.state.data[index].leiturasTemporais)[res]])
         this.setState({ultimasLeituras: currentStateCopy})
         // console.log(currentStateCopy)
       }      
     }
     // console.log("..", this.state.ultimasLeituras[0])
+    console.log(this.state.data)
   }
 
   render() {
-
-    console.log("render", this.state.ultimasLeituras)
     
     if (this.state.isLoading == false){
-      let a = this.state.data
+      let a = this.state.ultimasLeituras
         return (
         
         <ScrollView>
           <View style={styles.container}>
             <Text style={styles.welcome}>
-              {this.state.edificio}
+              
             </Text>
   
             {this.state.ultimasLeituras.map(item =>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("Graph", {
-              dados: this.state.data,
+            <TouchableOpacity key={item[14].reservatorio.id} onPress={() => this.props.navigation.navigate("Graph", {
+              dados: item,
               volumeMaximo : [parseInt(item)],
               nome: item
             })}>
                 <DashboardComponent 
-                  nome={item.reservatorio.nome} 
-                  volumeTotal={item.volumeMaximoFormatado}
-                  percentual={item.percentual}
-                  ultimaLeitura={item.dataUltimaLeituraFormatada}
-                  percentualGrafico={item.percentual}
+                  nome={item[14].reservatorio.nome} 
+                  volumeTotal={item[14].volumeMaximoFormatado}
+                  percentual={item[14].percentual}
+                  ultimaLeitura={item[14].dataUltimaLeituraFormatada}
+                  percentualGrafico={item[14].percentual}
                   />
             </TouchableOpacity>
             )}
