@@ -16,8 +16,8 @@ export default class DashboardScreen extends Component {
     super(props)
     this.state = {
       formError: [],
-      ids: [],
-      names: [],
+      estabelecimentoIds: [],
+      estabelecimentoNames: [],
       userData: '',
       email: '',
       password: '',
@@ -40,29 +40,18 @@ export default class DashboardScreen extends Component {
         if (response.status === 200) {
 
           this.setState({userData: await response.json()})
-          console.log('.')
           if (this.state.userData.resultados != undefined) {
-            console.log('..')
-            console.log(this.state.userData.resultados.length, this.state.userData.resultados)
             for(let index = 0; index < this.state.userData.resultados.length; index++){
-              console.log(this.state.userData.resultados[index].id, this.state.ids, !(this.state.userData.resultados[index].id in this.state.ids))
-              if(!(this.state.userData.resultados[index].id in this.state.ids)){
-                this.state.ids.push(this.state.userData.resultados[index].id)
-              }
-              if(!(this.state.userData.resultados[index].nome in this.state.names)){
-                this.state.names.push(this.state.userData.resultados[index].nome)
-              }
+              this.state.estabelecimentoIds.push(this.state.userData.resultados[index].id)
+              this.state.estabelecimentoNames.push(this.state.userData.resultados[index].nome)
             }
-            console.log(this.state.ids)
-
             // unique key
-            let uniqueIds = [...new Set(this.state.ids)]
-            let uniqueNames = [...new Set(this.state.names)]
-            
-            console.log('ids unicos',uniqueIds)
+            let uniqueEstabelecimentoIds = [...new Set(this.state.estabelecimentoIds)]
+            let uniqueEstabelecimentoNames = [...new Set(this.state.estabelecimentoNames)]
+
             this.props.navigation.navigate('Dashboard', {
-              resIds: uniqueIds,
-              resNames: uniqueNames,
+              resIds: uniqueEstabelecimentoIds,
+              resNames: uniqueEstabelecimentoNames,
               email: this.state.email,
               password: this.state.password
             })
