@@ -31,9 +31,9 @@ export default class DashboardScreen extends Component {
     this.setState({edificio: user.name})
 
     while (this.state.isLoading == true) {
-      for (let index = 0; index < user.resIds.length; index++){
-        console.log('id: ',user.resIds[index])
-        await fetch(`http://h2odigital.com.br/api/dashboard/${user.resIds[index]}`,{ 
+      for (let index = 0; index < user.estabelIds.length; index++){
+        console.log('id: ',user.estabelIds[index])
+        await fetch(`http://h2odigital.com.br/api/dashboard/${user.estabelIds[index]}`,{ 
           method: 'get', 
           headers: new Headers({
             'Authorization': 'Basic '+btoa(`${user.email}:${user.password}`), 
@@ -45,15 +45,15 @@ export default class DashboardScreen extends Component {
             let json = await response.json()
             await new Promise(resolve => setTimeout(resolve, 500)) // 0.5 sec
 
-            if (this.state.data[0] === "No data" && user.resIds[index] === user.resIds[0]){
+            if (this.state.data[0] === "No data" && user.estabelIds[index] === user.estabelIds[0]){
               this.setState({data: [json]})
             } else if (this.state.data[0] != "No data") {
               this.state.data.push(json)
             }
 
             await new Promise(resolve => setTimeout(resolve, 500)) // 0.5 sec
-            console.log(this.state.data.length, user.resIds.length)
-            if (user.resIds.length === this.state.data.length ){
+            console.log(this.state.data.length, user.estabelIds.length)
+            if (user.estabelIds.length === this.state.data.length ){
               this.setState({isLoading: false})
             }
             // console.log(this.state.data)

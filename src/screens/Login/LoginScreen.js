@@ -50,7 +50,7 @@ export default class DashboardScreen extends Component {
             let uniqueEstabelecimentoNames = [...new Set(this.state.estabelecimentoNames)]
 
             this.props.navigation.navigate('Dashboard', {
-              resIds: uniqueEstabelecimentoIds,
+              estabelIds: uniqueEstabelecimentoIds,
               resNames: uniqueEstabelecimentoNames,
               email: this.state.email,
               password: this.state.password
