@@ -89,7 +89,7 @@ export default class DashboardScreen extends Component {
             <Text style={styles.welcome}>
               
             </Text>
-  
+            
             {this.state.ultimasLeituras.map(item =>
             <TouchableOpacity key={item[14].reservatorio.id} onPress={() => this.props.navigation.navigate("Graph", {
               dados: item,

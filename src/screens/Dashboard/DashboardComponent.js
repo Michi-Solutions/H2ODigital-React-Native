@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import {decode, encode} from 'base-64'
-import ProgressCircleExample from './ProgressCircle'
+import Speedometer from './ProgressCircle';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function DashboardComponent(props) {
@@ -11,8 +11,8 @@ export default function DashboardComponent(props) {
               
             <Text style={styles.title}>{props.nome}</Text>
 
-            <View styles={styles.graph}>
-                <ProgressCircleExample percentual={props.percentualGrafico}/>
+            <View>
+                <Speedometer percentual={props.percentualGrafico}/>
             </View>
 
             <View style={styles.info}> 
@@ -72,9 +72,6 @@ const styles = StyleSheet.create({
       fontSize: 24,
       marginLeft: 20,
       marginTop: 15
-  },
-  graph: {
-      marginTop: 10
   },
   info: {
     display: 'flex',

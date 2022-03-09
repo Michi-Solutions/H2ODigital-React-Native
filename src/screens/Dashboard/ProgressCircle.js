@@ -1,61 +1,58 @@
 import React from 'react'
-import { PieChart } from 'react-native-svg-charts'
+import { View, StyleSheet } from 'react-native';
 import { Text } from 'react-native-svg'
+import { ProgressCircle } from 'react-native-svg-charts'
 
-class PieChartWithCenteredLabels extends React.PureComponent {
-
-    render() {
-
-        const data = [
-            {
-                key: 1,
-                amount: 100 - this.props.percentual,
-                svg: { fill: '#BBBBBB' },
-                arc: { cornerRadius: 10 }
-            },
-            {
-                key: 2,
-                amount: this.props.percentual,
-                svg: { fill: '#57b5db' },
-                arc: { cornerRadius: 10 }
-            }
-        ]
-
-        const Labels = ({ slices, height, width }) => {
-            return slices.map((slice, index) => {
-                const { labelCentroid, pieCentroid, data } = slice;
-                return (
-                    <Text
-                        key={index}
-                        x={pieCentroid[ 0 ]}
-                        y={pieCentroid[ 1 ]}
-                        fill={'black'}
-                        textAnchor={'middle'}
-                        alignmentBaseline={'middle'}
-                        fontSize={14}
-                        stroke={'black'}
-                        strokeWidth={0.2}
-                    >
-                        {data.amount}
-                    </Text>
-                )
-            })
-        }
-
-        return (
-            <PieChart
-                style={{ height: 100, marginTop: 10 }}
-                valueAccessor={({ item }) => item.amount}
-                data={data}
-                spacing={0}
-                outerRadius={50}
-                innerRadius={20}
-            >
-                <Labels/>
-            </PieChart>
-        )
+export const Speedometer = (props) => {
+  
+    const maxSpeed = 100
+    const speed = props.percentual
+    
+    const calculateSpeedForProgress = (speed, maxSpeed) => {
+      return speed / maxSpeed
     }
 
-}
+    const colorChanging = () => {
+        if (speed <= 49) {
+            return "orange"
+        } else if (speed <= 25) {
+            return "red"
+        } else {
+            return "#57b5db"
+        }
+    }
+  
+    const calculatedProgress = calculateSpeedForProgress(speed, maxSpeed)
+  
+    return (
+        
+            <ProgressCircle
+                    style={{ height: 120, paddingTop: 25 }}
+                    progress={calculatedProgress}
+                    progressColor={colorChanging()}
+                    backgroundColor={'#BBBBBB'}
+                    strokeWidth={7}
+                    startAngle={-Math.PI / 2}
+                    endAngle={Math.PI / 2}>
+                <Text
+                   x={1}
+                   y={-12}
+                   fill={'black'}
+                   textAnchor={'middle'}
+                   alignmentBaseline={'middle'}
+                   fontSize={27}
+                   fontWeight={'bolder'}
+                   stroke={'white'}
+                   opacity={'1'}
+                   strokeWidth={0.4}>
+                  {`${speed}%`}
+                </Text>
+              </ProgressCircle>
+            )
+  }
 
-export default PieChartWithCenteredLabels
+const styles = StyleSheet.create({
+
+})
+
+  export default Speedometer;
