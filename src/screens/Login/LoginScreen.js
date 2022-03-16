@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, StatusBar, TextInput, TouchableOpacity } from 'react-native';
 import {decode, encode} from 'base-64'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -75,7 +76,7 @@ export default class DashboardScreen extends Component {
     
   render() {
     return(
-      <View style={styles.container}>
+      <KeyboardAwareScrollView style={styles.container}>
         <StatusBar
         translucent
         backgroundColor='transparent'
@@ -111,7 +112,7 @@ export default class DashboardScreen extends Component {
             </TouchableOpacity>
         </View>
         
-      </View>
+      </KeyboardAwareScrollView>
   )}
 }
 
